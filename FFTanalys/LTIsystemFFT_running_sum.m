@@ -2,48 +2,47 @@ clear all
 close all
 clc
 
-b=ones(1,11)/11; %bk koefficienter f?r LTI FIR system. I detta exemlep ?r det one sample difference
-N=512;%Antal punkter i DFT
-dw=2*pi/N;%delta omega, frekvens uppl?sning
-kv=-N/2:N/2;%koefficienter k i den fulla DFT
+b=ones(1,11)/11; % bk coefficients for LTI FIR system. In this example, it is a one-sample difference
+N=512; % Number of points in DFT
+dw=2*pi/N; % delta omega, frequency resolution
+kv=-N/2:N/2; % coefficients k in the full DFT
 
-%Systemets frekvenssvar genom Npt-DFT 
-H=fft(b,N);%Fast Fourier Transform
-absH=abs(H);%Absolut beloppet
-argH=angle(H);%Fasen f?r FIR filtret i radianer alternativt atan2(imag(H),real(H)), eller atan2d(imag(H),real(H)) f?r att f? svar i grader
+% System frequency response through N-point DFT
+H=fft(b,N); % Fast Fourier Transform
+absH=abs(H); % Absolute magnitude
+argH=angle(H); % Phase of the FIR filter in radians, alternatively atan2(imag(H),real(H)), or atan2d(imag(H),real(H)) to get the answer in degrees
 
-%Systemets Magnituden 
-absH2=[absH(N/2+1:end) absH(1:N/2+1)];%Negativa delen i en DFT ligger i andra halvan av vktorn s? m?ste byta plats (se figure 8-5 i kursboken)
+% System Magnitude
+absH2=[absH(N/2+1:end) absH(1:N/2+1)]; % The negative part in a DFT lies in the second half of the vector, so we need to swap (see figure 8-5 in the course book)
 figure
 plot(kv*dw,absH2)
 axis([-pi pi 0 max(absH)])
 xlabel('Frequency [rad]')
 ylabel('Magnitude')
 
-%Systemets Fas
-argH2=[argH(N/2+1:end) argH(1:N/2+1)];%Negativa delen i en DFT ligger i andra halvan av vktorn s? m?ste byta plats (se figure 8-5 i kursboken)
+% System Phase
+argH2=[argH(N/2+1:end) argH(1:N/2+1)]; % The negative part in a DFT lies in the second half of the vector, so we need to swap (see figure 8-5 in the course book)
 figure
 plot(kv*dw,argH2)
 axis([-pi pi -pi pi])
 xlabel('Frequency [rad]')
 ylabel('Phase [rad]')
 
-%Testsignalen
+% Test signal
 n=0:N-1;
-A=2; %Amplitud
-k=1;%ger systemets absH(k+1)=1.0018 och argH(k+1)=1.0462 rad (kompensering f?r MATLABs vektor index b?rjar p? 1)
-fas=0; %Fas angiven i grader
-s=A*cos(dw*k*n+fas*(pi/180)); %signal med en frekvenskomponent
+A=2; % Amplitude
+k=1; % gives the system's absH(k+1)=1.0018 and argH(k+1)=1.0462 rad (compensation for MATLAB's vector index starting at 1)
+fas=0; % Phase given in degrees
+s=A*cos(dw*k*n+fas*(pi/180)); % signal with one frequency component
 
-y=conv(s,b,'full');%faltnin av signalen med systemet
+y=conv(s,b,'full'); % convolution of the signal with the system
 y = y(1:N);
 figure
-plot(n(1:end-1),y(1:end-1))%y(1:end-1) kan beh?vas skjusteras om f?rdr?jd i f?rh?llandet till s2(2:end) 
+plot(n(1:end-1),y(1:end-1)) % y(1:end-1) may need adjustment if delayed relative to s2(2:end)
 hold on
 
-%refferenssignal
+% Reference signal
 s2=absH(k+1)*A*cos((2*pi/N)*k*n+fas*(pi/180)+argH(k+1));
 s2 = s2(1:N);
-plot(n(1:end-1),s2(2:end),'--k')%s2(2:end) kan beh?vas skjusteras om f?rdr?jd i f?rh?llandet till y(1:end-1)
+plot(n(1:end-1),s2(2:end),'--k') % s2(2:end) may need adjustment if delayed relative to y(1:end-1)
 hold off
- 
