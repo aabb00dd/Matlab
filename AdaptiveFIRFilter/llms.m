@@ -24,7 +24,7 @@ function [A,E] = llms(x,d,mu,gamma,nord,a0)
 % "Statistical Digital Signal Processing and Modeling"
 % (John Wiley & Sons, 1996).
 %---------------------------------------------------------------
-%LLMS modified LMS by Josef Ström Bartunek
+%LLMS modified LMS by Josef StrÃ¶m Bartunek
 
 X=convm(x,nord);
 [M,N] = size(X);
