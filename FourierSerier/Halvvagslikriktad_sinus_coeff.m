@@ -1,35 +1,34 @@
-%Skriptet demostrerar hur man plottar koefficienterna ak fr?n
-%Fourier Serier Analysen med hj?lp av stem().
-%I detta fall g?ller koefficienterna f?r en fyrkantsv?g
-%OBS! Bara origo och den h?gra sidan av spektrummet ber?knas och plottas.
+% The script demonstrates how to plot the coefficients ak from
+% Fourier Series Analysis using stem().
+% In this case, the coefficients apply to a square wave.
+% NOTE! Only the origin and the right side of the spectrum are calculated and plotted.
 close all
 clear
 clc
 
-N=42; %Val av antal Koefficienter vi vill plotta
-T0=4; %periodtiden f?r den periodiska signalen
+N = 42; % Choice of the number of coefficients we want to plot
+T0 = 4; % Period of the periodic signal
 
-ak=zeros(1,N);
-for l=1:1:N/2
+ak = zeros(1, N);
+for l = 1:1:N/2
     k = 2*l;
-    ak(k) = 1 / (pi * (1 - (k)^2)); %formeln f?r ak tagen fr?n Exempel C.26 i boken
+    ak(k) = 1 / (pi * (1 - (k)^2)); % Formula for ak taken from Example C.26 in the book
 end
-ak=[(1/pi) ak]; %l?gg till a0
+ak = [(1/pi) ak]; % Add a0
 
-%H?r plottas koefficienterna med tecknet bevarad
-stem(0:N,ak)
+% Here, the coefficients are plotted with the sign preserved
+stem(0:N, ak)
 xlabel('Coeff k');
 ylabel('Amplitude');
 
-%H?r plottas absolutbellopet f?r koefficienterna
+% Here, the absolute value of the coefficients is plotted
 figure
-stem(0:N,abs(ak))
+stem(0:N, abs(ak))
 xlabel('Coeff k');
 ylabel('Magnitude');
 
-%H?r plottas absolutbellopet, samt omr?knad k ordningen till frekvens
+% Here, the absolute value is plotted, with the order k converted to frequency
 figure
-stem((0:N)*(1/T0),abs(ak))
+stem((0:N) * (1/T0), abs(ak))
 xlabel('Freq. [Hz]');
 ylabel('Magnitude');
-
