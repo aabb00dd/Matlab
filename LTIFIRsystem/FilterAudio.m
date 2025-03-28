@@ -2,52 +2,52 @@ clear
 close all
 clc
 
-%Ladda in data med impulssvar för de olika LTI FIR filtrar
+% Load data with impulse responses for the different LTI FIR filters
 load filters
 
-%Vid problem med att få igång inspelning kör nedanstående kommandot
-%audiodevreset;
+% If experiencing problems with recording, run the following command:
+% audiodevreset;
 
-%Parametrar
-Fs=48000;%Samplingsfrekvensen i Hz, (1000 till 200000 i Josefs dator)
-nBits=24;  %Antal bitar som går att välja 8, 16 och 24
-nChannels=1; %Antal kanaler, en kanal per mikrofon
-RecTime=1; %Inspelningstid i sec
+% Parameters
+Fs = 48000; % Sampling frequency in Hz (1000 to 200000 in Josef's computer)
+nBits = 24;  % Number of bits to select (8, 16, and 24)
+nChannels = 1; % Number of channels, one channel per microphone
+RecTime = 1; % Recording time in seconds
 
-myVoice = audiorecorder(Fs,nBits,nChannels);
+myVoice = audiorecorder(Fs, nBits, nChannels);
 
-%Skapar utskrift i Command Window för att markera när inspelning startar
-%och slutar.
-disp('Start speaking.');%inspelning startar en liten stund efter att denna visas i command fönstret
-recordblocking(myVoice, RecTime);%startar inspelning av audio och pausar skriptet
+% Create output in Command Window to mark when recording starts
+% and ends.
+disp('Start speaking.'); % Recording starts shortly after this appears in command window
+recordblocking(myVoice, RecTime); % Starts audio recording and pauses script
 disp('End of recording.');
 
-%Extrahera inspelad data ur objektet myVoice
-audio = getaudiodata(myVoice);%vid val av fler kanaler får vi en matris 
+% Extract recorded data from the myVoice object
+audio = getaudiodata(myVoice); % When selecting multiple channels we get a matrix
 
-soundsc(audio,Fs,nBits);
-pause(RecTime+1);
+soundsc(audio, Fs, nBits);
+pause(RecTime + 1);
 
-h=h7;%välj en av filtrarna
-y=filter(h,1,audio);%filtrering av den inspelad data
-soundsc(audio,Fs,nBits);
-pause(RecTime+1);
+h = h7; % Select one of the filters
+y = filter(h, 1, audio); % Filtering of the recorded data
+soundsc(audio, Fs, nBits);
+pause(RecTime + 1);
 
-%Plottar filter koefficienterna
+% Plot filter coefficients
 figure
-stem(0:34,h)
-title('Systemets impulssvar h[n]/ filter b_k koefficienter')
+stem(0:34, h)
+title('System impulse response h[n]/filter b_k coefficients')
 xlabel('n')
-ylabel('Amplitud')
+ylabel('Amplitude')
 
-%Plottar systemets freksvenssvar
+% Plot system frequency response
 figure
-freqz(h,1,[],Fs)%LTI FIR systemets frekvenssvar, magnituden i dB dvs 20*log10(abs(H))
+freqz(h, 1, [], Fs) % LTI FIR system frequency response, magnitude in dB i.e. 20*log10(abs(H))
 
-%plottar frekvensinnehållet (kräver Signal Processing Toolbox)
-%mer om detta senare i kursen när vi behandlar kapitel 8
-%här är den med bara för att ge lite inblick i frekvensinnehållet
+% Plot frequency content (requires Signal Processing Toolbox)
+% More on this later in the course when we cover chapter 8
+% Included here just to provide some insight into the frequency content
 figure
-spectrogram(audio,Fs/4,Fs/8,[],Fs,'yaxis')
+spectrogram(audio, Fs/4, Fs/8, [], Fs, 'yaxis')
 figure
-spectrogram(y,Fs/4,Fs/8,[],Fs,'yaxis')
+spectrogram(y, Fs/4, Fs/8, [], Fs, 'yaxis')
