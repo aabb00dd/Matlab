@@ -2,45 +2,45 @@ close all
 clear
 clc
 
-b=ones(1,11)/11; %bk koefficienter f?r LTI FIR system. I detta exemlep ?r det one sample difference.
+b = ones(1,11)/11; % bk coefficients for LTI FIR system (in this example it's a running average filter)
 
-N=512;%Antal sampel, v?lj j?mn nummer
-omega=-pi:(2*pi/512):pi;%skapa vektor med samplad frekvensaxeln mellan -pi och pi med N antal sampel
-H=freqz(b,1,omega);%r?knar fram frekvenssvaret H f?r FIR filtret (komplex)
-absH=abs(H);%Magnituden f?r FIR filtret
-argH=angle(H);%Fasen f?r FIR filtret i radianer
+N = 512; % Number of samples, choose even number
+omega = -pi:(2*pi/512):pi; % Create vector with sampled frequency axis between -pi and pi with N samples
+H = freqz(b, 1, omega); % Calculate frequency response H for FIR filter (complex)
+absH = abs(H); % Magnitude of FIR filter
+argH = angle(H); % Phase of FIR filter in radians
 
-%Plotta Magnituden
+% Plot Magnitude
 subplot(2,1,1)
-plot(omega,absH)
+plot(omega, absH)
 axis([-pi pi 0 max(absH)])
 xlabel('Frequency [rad]')
 ylabel('Magnitude')
 
-%Plotta Fasen
+% Plot Phase
 subplot(2,1,2)
-plot(omega,argH)
+plot(omega, argH)
 axis([-pi pi -pi pi])
 xlabel('Frequency [rad]')
 ylabel('Phase [rad]')
 
-%Testsignal
-n=0:N-1;%index vektorn
-A=2; %Amplitud
-l=258;%sampelposition
-w=omega(l);%v?lj frekvensen f?r testsignalen ur den samplad omega vektorn (f?r N=512, b?rjar positiva omega fr?n sampel 257)
-fas=0; %Fas angiven i grader
-s=A*cos(w*n+fas*(pi/180)); %signal med en frekvenskomponent
+% Test signal
+n = 0:N-1; % Index vector
+A = 2; % Amplitude
+l = 258; % Sample position
+w = omega(l); % Select test signal frequency from sampled omega vector (for N=512, positive omega starts from sample 257)
+phase = 0; % Phase in degrees
+s = A*cos(w*n + phase*(pi/180)); % Signal with one frequency component
 
-y=conv(s,b,'full');%faltnin av signalen med systemet
+y = conv(s, b, 'full'); % Convolution of signal with system
 figure
-plot(n,y(1:end-length(b)+1))
+plot(n, y(1:end-length(b)+1))
 hold on
 
-%Framr?knad med ekv. 6.6 i kursboken kap.6-2
-y2=absH(l)*A*cos(w*n+fas*(pi/180)+argH(l));
-plot(n,y2,'--k')
+% Pre-calculated using eq. 6.6 in textbook chapter 6-2
+y2 = absH(l)*A*cos(w*n + phase*(pi/180) + argH(l));
+plot(n, y2, '--k')
 hold off
 xlabel('Time [s]')
 ylabel('Amplitude')
-legend('Convolved','Calculated')
+legend('Convolved', 'Calculated')
