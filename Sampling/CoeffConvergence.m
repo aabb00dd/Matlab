@@ -1,26 +1,27 @@
-%Skriptet visar hur man estimerar ak parametrarna f?r en fyrkantsv?g
-%med den Diskreta Fourier Serien, d? vi bara har tillg?ng till en samplad
-%periodisk signal f[n]
+% The script demonstrates how to estimate the ak parameters for a square wave
+% using the Discrete Fourier Series, when we only have access to a sampled
+% periodic signal f[n]
 close all
 clear all
 clc
 
-k=4; %v?lj koefficient ak
-Nmax=64; %Maximal antal sampel under signalens ena period
-ak=[]; %tom vektor f?r att spara olika estimat med 
-for N=4:4:Nmax %for-loop f?r att ?ka antal sampel N
-    f=[ones(1,N/4) zeros(1,N/2) ones(1,N/4)];%skapa den samplad fyrkantsv?g ?ver en period 0 till 2*pi  
-    akN=0;%nollst?ll parametern
-    for n=0:N-1%for-loop f?r att skatta ak parameter
-        %formeln tagen ur formelsamling s.12 i kap. 1.6.2
-        %(ck ?r samma som ak i boken)
-        akN=akN+f(n+1)*exp(-j*((2*pi)/N)*k*n); %itterativ summa f?r att estimera ak
+k = 4; % Select coefficient ak
+Nmax = 64; % Maximum number of samples during one period of the signal
+ak = []; % Empty vector to store different estimates
+
+for N = 4:4:Nmax % For-loop to increase number of samples N
+    f = [ones(1,N/4) zeros(1,N/2) ones(1,N/4)]; % Create sampled square wave over one period 0 to 2*pi  
+    akN = 0; % Reset parameter
+    for n = 0:N-1 % For-loop to estimate ak parameter
+        % Formula taken from formula collection p.12 in chapter 1.6.2
+        % (ck is the same as ak in the book)
+        akN = akN + f(n+1)*exp(-j*((2*pi)/N)*k*n); % Iterative sum to estimate ak
     end
-    ak(end+1)=akN/N;%spara estimatet (inte den mest effektivaste s?ttet)
+    ak(end+1) = akN/N; % Save estimate (not the most efficient way)
 end
 
-plot(4:4:Nmax,(sin((pi*k)/2)/(pi*k))*ones(1,length(2:4:Nmax)),'r')%plotta den teoretiska v?rdet
-hold on; %beh?ll f?rra plotten
-plot(4:4:Nmax,ak); %plotta estimatet med de olika val av N
+plot(4:4:Nmax, (sin((pi*k)/2)/(pi*k))*ones(1,length(2:4:Nmax)), 'r') % Plot theoretical value
+hold on; % Keep previous plot
+plot(4:4:Nmax, ak); % Plot estimates with different N values
 hold off
 xlabel('N');
