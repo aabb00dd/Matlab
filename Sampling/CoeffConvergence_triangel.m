@@ -4,9 +4,7 @@ clc
 
 k = 1; % Choose coefficient ak
 Nmax = 20; % Maximum number of samples within one period
-ak=[]; %tom vektor f?r att spara olika estimat med 
-
-%?ndrat alla 4:4:Nmax till 1 ist?llet, r?tt?
+ak = []; % Empty vector to store different estimates
 
 for L = 1:1:Nmax % For-loop to increase the number of samples N
     f = linspace(0, 1, L); % Create the sampled triangular wave over one period (0 to 2*pi)
@@ -29,4 +27,3 @@ xlabel('N');
 ylabel('Estimated value');
 title('Convergence of the discrete Fourier series for a triangular signal');
 legend('Theoretical value', 'Estimate');
-
