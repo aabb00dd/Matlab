@@ -2,64 +2,64 @@ clear all;
 close all;
 clc
 
-N=2000; %Antal sampel i signalen (obs! skriptet ?r skriven bara f?r N med j?mna heltal)
-n=0:N-1; %vektor med index
+N = 2000; % Number of samples in signal (note: script written only for even N)
+n = 0:N-1; % Index vector
 
-%Genererar samplad sinusoid signal s[n]
-A=3; %Amplitud
-f=500; %Frekvens i Hz
-fs=1000; %Samplingsfrekvens i Hz
-fas=0; %Fas angiven i grader
-s=A*cos(2*pi*(f/fs)*n+fas*(pi/180)); %ren sinusoidal signal s[n] med normaliserad frekvens, se ekv. 4.2&4.3 i boken  
+% Generate sampled sinusoidal signal s[n]
+A = 3; % Amplitude
+f = 500; % Frequency in Hz
+fs = 1000; % Sampling frequency in Hz
+phase = 0; % Phase in degrees
+s = A*cos(2*pi*(f/fs)*n + phase*(pi/180)); % Pure sinusoidal signal s[n] with normalized frequency, see eq. 4.2&4.3 in book
 
-Ts=1/fs;%samplingstid
-Tf=1/f;%periodtid f?r s[n]
-tn=0:Ts:5*Tf;%tidsvektorn med relevanta l?ngden f?r plottning i f?rsta plotten med 5 perioder
+Ts = 1/fs; % Sampling time
+Tf = 1/f; % Period time for s[n]
+tn = 0:Ts:5*Tf; % Time vector with relevant length for plotting first 5 periods
 
-%generering av ?versamplad s[n] f?r att efterlikna "tidskontinuerlig" referens signal r(t) 
-Tr=1/(40*fs);%Samplingstid f?r refferens signalen (man v?ljer n?tt som uppfyller samplingsteoremet, i detta fall 40x snabbare ?n vald samplingsfrekvens)
-t=0:Tr:5*Tf;%skapar tidsvektorn f?r 5st perioder av signalen
-r=A*cos(2*pi*f*t+fas*(pi/180)); %referens signal med ej vikt frekvens
+% Generate oversampled s[n] to approximate "continuous-time" reference signal r(t)
+Tr = 1/(40*fs); % Sampling time for reference signal (chosen to satisfy sampling theorem, 40x faster than selected sampling frequency)
+t = 0:Tr:5*Tf; % Create time vector for 5 periods of signal
+r = A*cos(2*pi*f*t + phase*(pi/180)); % Reference signal with unwrapped frequency
 
-%Testa f?r vikning
-if(2*pi*(f/fs)<pi)%ej vikning
-    rec=r;
-elseif (2*pi*(f/fs)==pi)%vikt i vikningspunkten (specialfall)
-    Amp=A*cos(fas*(pi/180));
-    rec=Amp*cos(2*pi*f*t);
-else %vikning
-    l=round((2*pi*(f/fs))/(2*pi));%ber?kna hur m?nga multiplar av 2*pi ska bort
-    omega=(2*pi*(f/fs)-2*pi*l)*fs;%ber?kna den vikta frekvensen i radianer
-    rec=A*cos(omega*t+fas*(pi/180));%generera den idealt rekonstruerad signal med den vikta frekvensen rec(t)
+% Test for aliasing
+if (2*pi*(f/fs) < pi) % No aliasing
+    rec = r;
+elseif (2*pi*(f/fs) == pi) % Aliasing at folding point (special case)
+    Amp = A*cos(phase*(pi/180));
+    rec = Amp*cos(2*pi*f*t);
+else % Aliasing
+    l = round((2*pi*(f/fs))/(2*pi)); % Calculate how many multiples of 2*pi to remove
+    omega = (2*pi*(f/fs) - 2*pi*l)*fs; % Calculate aliased frequency in radians
+    rec = A*cos(omega*t + phase*(pi/180)); % Generate ideally reconstructed signal with aliased frequency rec(t)
 end
 
-%plottar s[n], r(t) och rec(t) i samma plott
+% Plot s[n], r(t) and rec(t) together
 figure
-stem(tn,s(1:length(tn)));%plotta sampel f?r den samplad signal s[n]
+stem(tn, s(1:length(tn))); % Plot samples of sampled signal s[n]
 hold on
-plot(t,r,'r')%plotta referens signalen r(t)
-plot(t,rec,'--k')%plotta den rekonstruerad signal rec(t)
+plot(t, r, 'r') % Plot reference signal r(t)
+plot(t, rec, '--k') % Plot reconstructed signal rec(t)
 hold off
 xlabel('Time [s]')
 ylabel('Amplitude')
 title('Pure sine signal')
-legend('Sampels s[n]','Reference r(t)','Reconstructed rec(t)')
+legend('Samples s[n]', 'Reference r(t)', 'Reconstructed rec(t)')
 
-%Ber?knar spektrum med FFT. OBS! I detta labb bara f?r att se frekvensinneh?llet
-%i s[n]. Mer om FFT n?r vi behandlar kapitel 8.
-S=abs(fft(s)); %OBS, vi letar efter frekvensen, d?rav magnituden av spektrat fullt duglig. FFT utf?rs p? hela signalen som ?r N sampel l?ng.
-S=S(1:N/2+1)/N; %Reell data ger symetrisk spektrum, d?rf?r r?cker halva. Division med N f?r att f? r?tt amplitud samt +1 f?r att f? punkten i pi,fs/2. 
+% Calculate spectrum with FFT. NOTE! In this lab just to see frequency content
+% in s[n]. More about FFT when we cover chapter 8.
+S = abs(fft(s)); % NOTE: we're looking for frequency, so magnitude spectrum is sufficient. FFT performed on entire N-sample signal.
+S = S(1:N/2+1)/N; % Real data gives symmetric spectrum, so half is enough. Division by N for correct amplitude and +1 to get point at pi,fs/2.
 
-%plotta med normaliserad f p? x-axeln samt plot ger kontinuerlig kurvan
+% Plot with normalized f on x-axis and continuous curve
 figure
-plot(n(1:N/2+1)/N,S)
+plot(n(1:N/2+1)/N, S)
 xlabel('Normalized frequency f/fs')
 ylabel('Magnitude')
 title('Spectrum of the sampled signal s[n]')
 
-%plotta med f i Hz p? x-axeln samt stem ger plott med enbart de speifika v?rden i vektorn 
+% Plot with f in Hz on x-axis and stem plot showing specific values
 figure
-stem(n(1:N/2+1)*(fs/(N)),S)
+stem(n(1:N/2+1)*(fs/(N)), S)
 xlabel('Frequency [Hz]')
 ylabel('Magnitude')
 title('Spectrum of the sampled signal s[n]')
