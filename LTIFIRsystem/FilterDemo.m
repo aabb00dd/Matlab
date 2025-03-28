@@ -1,44 +1,44 @@
-%Skriptet demonstrerar hur man kan filtrera bort bruset i en ljudsignal
+% The script demonstrates how to filter out noise from an audio signal
 close all
 clear
 clc
 
-%lada in data i Workspace
+% Load data into Workspace
 load sounddata 
 
-y=filter(h,1,sound);%filtrerar signalen sound med systemet h (jämför med komandot conv())
+y = filter(h, 1, sound); % Filter the sound signal with system h (compare with conv() command)
 
-soundsc(audio,fs); %spelar upp original ljudfil (för jämförelse)
+soundsc(audio, fs); % Play original audio file (for comparison)
 pause(11)
 
-soundsc(sound,fs);%signalen med pålagd slumpmässig brus i högre frekvensbandet
+soundsc(sound, fs); % Signal with added random noise in higher frequency band
 pause(11)
 
-soundsc(y,fs);%ljudet efter brusreduktion genom filtrering med LTI FIR system h
+soundsc(y, fs); % Audio after noise reduction through filtering with LTI FIR system h
 pause(11)
 
-%Plottar filter koefficienterna
+% Plot filter coefficients
 figure
-stem(0:34,h)
-title('Systemets impulssvar h[n]/ filter b_k koefficienter')
+stem(0:34, h)
+title('System impulse response h[n]/filter b_k coefficients')
 xlabel('n')
-ylabel('Amplitud')
+ylabel('Amplitude')
 
-%Plottar systemets freksvenssvar
+% Plot system frequency response
 figure
-freqz(h,1,[],fs)%LTI FIR systemets frekvenssvar, magnituden i dB dvs 20*log10(abs(H))
+freqz(h, 1, [], fs) % LTI FIR system frequency response, magnitude in dB i.e. 20*log10(abs(H)))
 
-%plottar frekvensinnehållet (kräver Signal Processing Toolbox)
-%mer om detta senare i kursen när vi behandlar kapitel 8
-%här är den med bara för att ge lite inblick i frekvensinnehållet
+% Plot frequency content (requires Signal Processing Toolbox)
+% More on this later in the course when we cover chapter 8
+% Included here just to provide some insight into the frequency content
 figure
-spectrogram(audio,fs/4,fs/8,[],fs,'yaxis')
-title('Original ljudfil')
-
-figure
-spectrogram(sound,fs/4,fs/8,[],fs,'yaxis')
-title('Pålagd brus')
+spectrogram(audio, fs/4, fs/8, [], fs, 'yaxis')
+title('Original audio')
 
 figure
-spectrogram(y,fs/4,fs/8,[],fs,'yaxis')
-title('Efter filtrering')
+spectrogram(sound, fs/4, fs/8, [], fs, 'yaxis')
+title('Added noise')
+
+figure
+spectrogram(y, fs/4, fs/8, [], fs, 'yaxis')
+title('After filtering')
