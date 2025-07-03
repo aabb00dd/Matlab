@@ -52,5 +52,3 @@
 - **Description**: This file contains a pre-recorded signal that is used in `DiskretSpektrum_modifierad.m` for FFT analysis.
 - **Usage**: Loaded in `DiskretSpektrum_modifierad.m` to perform spectral analysis.
 
-## License
-This project is proprietary and not available for public modification or distribution.
