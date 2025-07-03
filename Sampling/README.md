@@ -64,5 +64,3 @@
 - Time-domain vs frequency-domain analysis
 - Signal visualization techniques
 
-## License
-This project is proprietary and not available for public modification or distribution.
