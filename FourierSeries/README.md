@@ -37,5 +37,3 @@ All coefficient analysis scripts:
   - T0 = 4 (signal period)
   - Time vector spans 3 periods for clear visualization
 
-## License
-This project is proprietary and not available for public modification or distribution.
