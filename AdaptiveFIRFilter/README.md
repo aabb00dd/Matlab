@@ -51,5 +51,3 @@
 - **Description**: A test script that demonstrates the use of the LMS, NLMS, and LLMS algorithms for adaptive filtering. It generates a random input signal, applies a known filter, and then uses the adaptive filters to estimate the original filter coefficients.
 - **Usage**: Run the script to see the performance of the LMS, NLMS, and LLMS algorithms in terms of filter coefficient convergence and error minimization.
 
-## License
-This project is proprietary and not available for public modification or distribution.
