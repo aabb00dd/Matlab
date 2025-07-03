@@ -64,5 +64,4 @@
 - System identification through impulse response
 - Convolution vs frequency domain multiplication
 
-## License
-This project is proprietary and not available for public modification or distribution.
+
